@@ -10,6 +10,10 @@ namespace VeterinarioAPI.Controllers
 {
     public class AnimalController : ApiController
     {
+        /// <summary>
+        /// Listar todos os animal registrados.
+        /// </summary>
+        /// <returns>Lista de Animais</returns>
         [Route("api/Animal/get")]
         public List<Animal> Get()
         {
