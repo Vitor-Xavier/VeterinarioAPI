@@ -11,6 +11,8 @@ namespace VeterinarioAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ContatoId { get; set; }
         public string Texto { get; set; }
+        public bool Principal { get; set; }
+        public int TipoContatoId { get; set; }
         public TipoContato TipoContato { get; set; }
     }
 }

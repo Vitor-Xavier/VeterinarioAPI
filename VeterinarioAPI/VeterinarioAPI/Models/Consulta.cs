@@ -12,7 +12,9 @@ namespace VeterinarioAPI.Models
         public int ConsultaId { get; set; }
         public DateTime Data { get; set; }
         public string Descricao { get; set; }
+        public int AnimalId { get; set; }
         public Animal Animal { get; set; }
+        public int ProfissionalId { get; set; }
         public Profissional Profissional { get; set; }
     }
 }

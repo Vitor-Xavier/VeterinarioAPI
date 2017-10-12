@@ -11,6 +11,5 @@ namespace VeterinarioAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TipoAnimalId { get; set; }
         public string Tipo { get; set; }
-        public string Raca { get; set; }
     }
 }

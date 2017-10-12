@@ -106,6 +106,9 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Context\DatabaseContext.cs" />
     <Compile Include="Controllers\AnimalController.cs" />
+    <Compile Include="Controllers\ConsultaController.cs" />
+    <Compile Include="Controllers\ProfissionalController.cs" />
+    <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

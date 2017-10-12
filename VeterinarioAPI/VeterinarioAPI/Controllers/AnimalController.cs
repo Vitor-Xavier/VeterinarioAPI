@@ -1,39 +1,133 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using VeterinarioAPI.Context;
 using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Controllers
 {
     public class AnimalController : ApiController
     {
+        private DatabaseContext _context;
+
         /// <summary>
-        /// Listar todos os animal registrados.
+        /// Inicializa a conexão de dados.
         /// </summary>
-        /// <returns>Lista de Animais</returns>
-        [Route("api/Animal/get")]
-        public List<Animal> Get()
+        public AnimalController()
         {
-            return new List<Animal>
+            _context = new DatabaseContext();
+        }
+
+        /// <summary>
+        /// Retona lita de animais associados a determinado usuário.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <returns>Lista de Animais</returns>
+        [Route("Animal/{usuarioId:int}")]
+        public IEnumerable<Animal> Get(int usuarioId)
+        {
+            return from a in _context.Animal
+                   where a.UsuarioId == usuarioId
+                   select a;
+        }
+
+        /// <summary>
+        /// Retorna animal correspodente a identificação informada.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="animalId">Identificação do animal</param>
+        /// <returns>Animal</returns>
+        [Route("Animal/{usuarioId:int}/{animalId:int}")]
+        public Animal GetById(int usuarioId, int animalId)
+        {
+            return (from a in _context.Animal
+                    where a.UsuarioId == usuarioId && 
+                    a.AnimalId == animalId
+                    select a).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Pesquisa animais de determinada pessoa pelo nome.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="nome">Nome do animal para pesquisa</param>
+        /// <returns></returns>
+        public IEnumerable<Animal> GetByName(int usuarioId, string nome)
+        {
+            return from a in _context.Animal
+                   where a.UsuarioId == usuarioId &&
+                   a.Nome.Contains(nome)
+                   select a;
+        }
+
+        /// <summary>
+        /// Adiciona animal e o associa ao dono.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="animal">Dados do animal</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPost]
+        [Route("Animal/{usuarioId:int}")]
+        public IHttpActionResult PostAnimal(int usuarioId, [FromBody] Animal animal)
+        {
+            try
             {
-                new Animal
-                {
-                    AnimalId = 1,
-                    Nome = "Scooby-Doo",
-                    DataNascimento = new DateTime(2006, 10, 1),
-                    TipoAnimal = new TipoAnimal{TipoAnimalId = 1, Tipo = "Cachorro", Raca = "Dachshund" },
-                    Dono = new Usuario{Nome = "Vitor", Sobrenome = "Xavier", UsuarioId = 1, Endereco = new Endereco {Logradouro = "Rua Arnaldo Victaliano", Bairro = "Iguatemi", Numero = 1610, Complemento = "Ap. 51-A", Estado = "SP", Cidade = "Ribeirão Preto", CEP = "14091220", EnderecoId = 1 } } },
-                 new Animal
-                {
-                    AnimalId = 1,
-                    Nome = "Triss",
-                    DataNascimento = new DateTime(2006, 10, 1),
-                    TipoAnimal = new TipoAnimal{TipoAnimalId = 2, Tipo = "Gato", Raca = "Gato" },
-                    Dono = new Usuario{ Nome = "Vitor", Sobrenome = "Xavier", UsuarioId = 1, Endereco = new Endereco {Logradouro = "Rua Rio Branco", Bairro = "Americanópolis", Numero = 65, Complemento = null, Estado = "SP", Cidade = "São Paulo", CEP = "14091220", EnderecoId = 1 } } },
-            };
+                _context.Animal.Add(animal);
+                _context.SaveChanges();
+                return Created(usuarioId.ToString(), animal);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Altera dados de animal cadastrado
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="animal">Dados do animal</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPut]
+        [Route("Animal/{usuarioId:int}")]
+        public IHttpActionResult PutAnimal(int usuarioId, [FromBody] Animal animal)
+        {
+            try
+            {
+                _context.Animal.AddOrUpdate(animal);
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Muda estado do animal para inativo.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="animalId">Identificação do animal</param>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("Animal/{usuarioId:int}/{animalId:int}")]
+        public IHttpActionResult DeleteAnimal(int usuarioId, int animalId)
+        {
+            try
+            {
+                _context.Entry(new Animal { AnimalId = animalId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
         }
     }
 }
