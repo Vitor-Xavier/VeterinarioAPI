@@ -13,6 +13,6 @@ namespace VeterinarioAPI.Models
         public string Texto { get; set; }
         public bool Principal { get; set; }
         public int TipoContatoId { get; set; }
-        public TipoContato TipoContato { get; set; }
+        public virtual TipoContato TipoContato { get; set; }
     }
 }

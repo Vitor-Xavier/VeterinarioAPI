@@ -14,8 +14,8 @@ namespace VeterinarioAPI.Models
         public DateTime DataNascimento { get; set; }
         public string Imagem { get; set; }
         public int TipoAnimalId { get; set; }
-        public TipoAnimal TipoAnimal { get; set; }
+        public virtual TipoAnimal TipoAnimal { get; set; }
         public int UsuarioId { get; set; }
-        public Usuario Dono { get; set; }
+        public virtual Usuario Dono { get; set; }
     }
 }

@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Data.Entity.Spatial;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using VeterinarioAPI.Context;
 using VeterinarioAPI.Models;
@@ -46,11 +44,22 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/{latitude:float}/{longitude:float}")]
         public IEnumerable<Profissional> GetByLocation(float latitude, float longitude)
         {
+            try
+            {
+                var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
+                var tst = from p in _context.Profissional
+                          let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude + " " + p.Endereco.Longitude + ")")
+                          //orderby DbGeography.FromText(String.Format("POINT({0} {1})", p.Endereco.Latitude.ToString().Replace(",", "."), p.Endereco.Longitude.ToString().Replace(",", "."))).Distance(coord)
+                          orderby coord2.Distance(coord)
+                          //orderby p.Endereco.Localizacao.Distance(coord)
+                          select p;
+                return tst;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
             
-            var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-            return from p in _context.Profissional
-                   orderby p.Endereco.Localizacao.Distance(coord)
-                   select p;
         }
 
         /// <summary>
@@ -154,5 +163,32 @@ namespace VeterinarioAPI.Controllers
                 return InternalServerError();
             }
         }
+
+        /// <summary>
+        /// Adiciona contato ao profissional.
+        /// </summary>
+        /// <param name="profissionalId">Identificação do profissional</param>
+        /// <param name="contato">Dados de contato</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPost]
+        [Route("Profissional/Servico/{profissionalId:int}")]
+        public IHttpActionResult PostServicoProfissional(int profissionalId, [FromBody] Servico servico)
+        {
+            try
+            {
+                var profissional = (from p in _context.Profissional
+                                    where p.ProfissionalId == profissionalId
+                                    select p).FirstOrDefault();
+                profissional?.Servicos.Add(servico);
+                _context.Profissional.AddOrUpdate(profissional);
+                _context.SaveChanges();
+                return Created("Ok", profissionalId);
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
     }
 }

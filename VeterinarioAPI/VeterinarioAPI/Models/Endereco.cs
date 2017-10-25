@@ -22,19 +22,19 @@ namespace VeterinarioAPI.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        private DbGeography localizacao;
-        [JsonIgnore]
-        public DbGeography Localizacao
-        {
-            get
-            {
-                return DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
-            }
-            set
-            {
-                localizacao = DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
-            }
-        }
+        //private DbGeography localizacao;
+        //[JsonIgnore]
+        //public DbGeography Localizacao
+        //{
+        //    get
+        //    {
+        //        return DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
+        //    }
+        //    set
+        //    {
+        //        localizacao = DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
+        //    }
+        //}
 
     }
 }
