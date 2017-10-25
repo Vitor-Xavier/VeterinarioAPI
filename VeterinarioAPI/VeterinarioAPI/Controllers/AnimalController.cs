@@ -10,6 +10,9 @@ using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Controllers
 {
+    /// <summary>
+    /// Classe que controla o acesso aos dados de animais.
+    /// </summary>
     public class AnimalController : ApiController
     {
         private DatabaseContext _context;

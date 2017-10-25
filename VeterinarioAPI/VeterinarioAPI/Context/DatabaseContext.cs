@@ -9,7 +9,7 @@ namespace VeterinarioAPI.Context
 {
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext() : base("name=VETERINARIODB") { }
+        public DatabaseContext() : base("name=Veterinario_DB") { } //base("name=VETERINARIODB") { }
 
         public virtual DbSet<Animal> Animal { get; set; }
         public virtual DbSet<Consulta> Consulta { get; set; }
@@ -20,5 +20,11 @@ namespace VeterinarioAPI.Context
         public virtual DbSet<TipoAnimal> TipoAnimal { get; set; }
         public virtual DbSet<TipoContato> TipoContato { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer<DatabaseContext>(null);
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

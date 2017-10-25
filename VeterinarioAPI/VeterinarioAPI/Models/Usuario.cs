@@ -14,6 +14,6 @@ namespace VeterinarioAPI.Models
         public string Sobrenome { get; set; }
         public string Imagem { get; set; }
         public Endereco Endereco { get; set; }
-        public virtual ICollection<Contato> Contato { get; set; }
+        public virtual ICollection<Contato> Contatos { get; set; }
     }
 }

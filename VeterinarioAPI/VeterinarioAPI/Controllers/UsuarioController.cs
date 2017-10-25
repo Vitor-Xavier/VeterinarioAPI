@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using VeterinarioAPI.Context;
 using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Controllers
 {
+    /// <summary>
+    /// Gerencia as requisições sobre dados de usuários.
+    /// </summary>
     public class UsuarioController : ApiController
     {
         private DatabaseContext _context;
@@ -27,6 +27,7 @@ namespace VeterinarioAPI.Controllers
         /// </summary>
         /// <param name="usuarioId"></param>
         /// <returns>Usuário</returns>
+        [HttpGet]
         [Route("Usuario/{usuarioId:int}")]
         public Usuario Get(int usuarioId)
         {
@@ -91,6 +92,33 @@ namespace VeterinarioAPI.Controllers
                 _context.Entry(new Usuario { UsuarioId = usuarioId }).State = System.Data.Entity.EntityState.Deleted;
                 _context.SaveChanges();
                 return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Adiciona contato ao usuário informado.
+        /// </summary>
+        /// <param name="usuarioId">Identificação do usuário</param>
+        /// <param name="contato">Dados de contato</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPost]
+        [Route("Usuario/Contato/{usuarioId:int}")]
+        public IHttpActionResult PostContatoUsuario(int usuarioId, [FromBody] Contato contato)
+        {
+            try
+            {
+                var usuario = (from u in _context.Usuario
+                               where u.UsuarioId == usuarioId
+                               select u).SingleOrDefault();
+                usuario?.Contatos.Add(contato);
+                _context.Usuario.AddOrUpdate(usuario);
+                _context.SaveChanges();
+
+                return Created("Ok", usuarioId);
             }
             catch (Exception)
             {

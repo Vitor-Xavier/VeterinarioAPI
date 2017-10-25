@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity.Spatial;
 
 namespace VeterinarioAPI.Models
 {
@@ -13,6 +14,7 @@ namespace VeterinarioAPI.Models
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string Imagem { get; set; }
+        public string Icone { get; set; }
         public string CRV { get; set; }
         public int EnderecoId { get; set; }
         public Endereco Endereco { get; set; }

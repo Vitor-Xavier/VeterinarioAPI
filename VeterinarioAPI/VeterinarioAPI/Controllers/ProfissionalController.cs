@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity.Migrations;
+using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -10,6 +11,9 @@ using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Controllers
 {
+    /// <summary>
+    /// Coordena o acesso aos dados de profissionais registrados.
+    /// </summary>
     public class ProfissionalController : ApiController
     {
         private DatabaseContext _context;
@@ -35,14 +39,31 @@ namespace VeterinarioAPI.Controllers
         /// <summary>
         /// Retorna dados de profissional em específico.
         /// </summary>
+        /// <param name="latitude">Latitude da localização do usuário</param>
+        /// <param name="longitude">Longitude do usuário</param>
+        /// <returns>Usuário</returns>
+        [HttpGet]
+        [Route("Profissional/{latitude:float}/{longitude:float}")]
+        public IEnumerable<Profissional> GetByLocation(float latitude, float longitude)
+        {
+            
+            var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
+            return from p in _context.Profissional
+                   orderby p.Endereco.Localizacao.Distance(coord)
+                   select p;
+        }
+
+        /// <summary>
+        /// Retorna dados de profissional em específico.
+        /// </summary>
         /// <param name="profissionalId"></param>
         /// <returns>Usuário</returns>
         [Route("Profissional/{profissionalId:int}")]
         public Profissional GetById(int profissionalId)
         {
-            return (from a in _context.Profissional
-                    where a.ProfissionalId == profissionalId
-                    select a).FirstOrDefault();
+            return (from p in _context.Profissional
+                    where p.ProfissionalId == profissionalId
+                    select p).FirstOrDefault();
         }
 
         /// <summary>
@@ -81,7 +102,7 @@ namespace VeterinarioAPI.Controllers
                 _context.SaveChanges();
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -101,6 +122,32 @@ namespace VeterinarioAPI.Controllers
                 _context.Entry(new Profissional { ProfissionalId = profissionalId }).State = System.Data.Entity.EntityState.Deleted;
                 _context.SaveChanges();
                 return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
+        /// Adiciona contato ao profissional.
+        /// </summary>
+        /// <param name="profissionalId">Identificação do profissional</param>
+        /// <param name="contato">Dados de contato</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPost]
+        [Route("Profissional/Contato/{profissionalId:int}")]
+        public IHttpActionResult PostContatoProfissional(int profissionalId, [FromBody] Contato contato)
+        {
+            try
+            {
+                var profissional = (from p in _context.Profissional
+                                    where p.ProfissionalId == profissionalId
+                                    select p).FirstOrDefault();
+                profissional?.Contatos.Add(contato);
+                _context.Profissional.AddOrUpdate(profissional);
+                _context.SaveChanges();
+                return Created("Ok", profissionalId);
             }
             catch (Exception)
             {
