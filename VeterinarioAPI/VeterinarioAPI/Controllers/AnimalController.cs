@@ -77,6 +77,11 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                animal.UsuarioId = usuarioId;
+                var tipoAnimal = (from ta in _context.TipoAnimal
+                                  where ta.TipoAnimalId == animal.TipoAnimalId
+                                  select ta).SingleOrDefault();
+                animal.TipoAnimal = tipoAnimal ?? animal.TipoAnimal;
                 _context.Animal.Add(animal);
                 _context.SaveChanges();
                 return Created(usuarioId.ToString(), animal);

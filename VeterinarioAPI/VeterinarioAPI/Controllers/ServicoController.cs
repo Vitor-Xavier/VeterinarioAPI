@@ -8,6 +8,9 @@ using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Controllers
 {
+    /// <summary>
+    /// Manuseia o base de dados buscando e alterando serviços.
+    /// </summary>
     public class ServicoController : ApiController
     {
         private DatabaseContext _context;

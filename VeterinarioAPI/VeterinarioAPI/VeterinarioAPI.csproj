@@ -142,6 +142,7 @@
     <Compile Include="Models\Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlServerTypes\Loader.cs" />
+    <Compile Include="Utils\ServicoComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

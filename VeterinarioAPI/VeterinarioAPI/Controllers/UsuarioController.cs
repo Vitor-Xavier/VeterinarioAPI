@@ -114,6 +114,10 @@ namespace VeterinarioAPI.Controllers
                 var usuario = (from u in _context.Usuario
                                where u.UsuarioId == usuarioId
                                select u).SingleOrDefault();
+                var tipoContato = (from tc in _context.TipoContato
+                                   where tc.TipoContatoId == contato.TipoContatoId
+                                   select tc).FirstOrDefault();
+                contato.TipoContato = tipoContato ?? contato.TipoContato;
                 usuario?.Contatos.Add(contato);
                 _context.Usuario.AddOrUpdate(usuario);
                 _context.SaveChanges();
@@ -125,5 +129,6 @@ namespace VeterinarioAPI.Controllers
                 return InternalServerError();
             }
         }
+
     }
 }

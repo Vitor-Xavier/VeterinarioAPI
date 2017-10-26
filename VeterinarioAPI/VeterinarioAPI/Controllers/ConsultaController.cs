@@ -32,9 +32,9 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/usuario/{usuarioId:int}")]
-        [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime}/")]
-        [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByUsuario(int usuarioId, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime?}/")]
+        [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByUsuario(int usuarioId, DateTime? dataIni, DateTime? dataFim)
         {
             return from c in _context.Consulta
                    where c.Animal.UsuarioId == usuarioId &&
@@ -117,9 +117,9 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/profissional/{profissionalId:int}")]
-        [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime}/")]
-        [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByProfissional(int profissionalId, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime?}/")]
+        [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByProfissional(int profissionalId, DateTime? dataIni, DateTime? dataFim)
         {
             return from c in _context.Consulta
                    where c.ProfissionalId == profissionalId &&

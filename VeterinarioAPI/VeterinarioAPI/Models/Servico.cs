@@ -16,5 +16,10 @@ namespace VeterinarioAPI.Models
         public bool RequerCRV { get; set; }
         [JsonIgnore]
         public virtual ICollection<Profissional> Profissionais { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            return ServicoId == (obj as Servico).ServicoId;
+        }
     }
 }
