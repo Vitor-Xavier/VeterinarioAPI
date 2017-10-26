@@ -49,7 +49,7 @@ namespace VeterinarioAPI.Controllers
             {
                 var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
                 var tst = from p in _context.Profissional
-                          let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude + " " + p.Endereco.Longitude + ")")
+                          let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                           orderby coord2.Distance(coord)
                           select p;
                 return tst;
@@ -85,9 +85,9 @@ namespace VeterinarioAPI.Controllers
 
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
             return from p in _context.Profissional.AsEnumerable<Profissional>()
-                   //let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude + " " + p.Endereco.Longitude + ")")
+                   let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                    where p.Servicos.Any(s1 => servicos.Any(s2 => s2.ServicoId == s1.ServicoId))
-                   //orderby coord2.Distance(coord)
+                   orderby coord2.Distance(coord)
                    select p;
         }
 
@@ -99,9 +99,9 @@ namespace VeterinarioAPI.Controllers
 
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
             var tst = from p in _context.Profissional.AsEnumerable<Profissional>()
-                      //let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude + " " + p.Endereco.Longitude + ")")
+                      let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                       where p.Servicos.Where(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)).Count() == servicos.Count()
-                      //orderby coord2.Distance(coord)
+                      orderby coord2.Distance(coord)
                       select p;
             return tst;
         }
