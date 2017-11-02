@@ -1,4 +1,6 @@
-﻿using Swashbuckle.Application;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using Swashbuckle.Application;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +25,12 @@ namespace VeterinarioAPI
                 handler: new RedirectHandler(message => message.RequestUri.ToString().TrimEnd('/'), "swagger/ui/index")
             );
             config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+            var formatters = GlobalConfiguration.Configuration.Formatters;
+            var jsonFormatter = formatters.JsonFormatter;
+            var settings = jsonFormatter.SerializerSettings;
+            settings.Formatting = Formatting.Indented;
+            settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
     }
 }

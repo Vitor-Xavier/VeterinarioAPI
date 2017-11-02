@@ -57,21 +57,20 @@ namespace VeterinarioAPI.Controllers
         }
 
         /// <summary>
-        /// Adiciona serviço ao profissional.
+        /// Altera dados de serviço.
         /// </summary>
-        /// <param name="profissionalId">Identificação do profissional</param>
-        /// <param name="servico">Serviço a associado</param>
+        /// <param name="servico">Dados do serviço</param>
         /// <returns>Sucesso da operação</returns>
         [HttpPut]
-        [Route("Servico/{profissionalId:int}")]
-        public IHttpActionResult PutServico(int profissionalId, [FromBody] Servico servico)
+        [Route("Servico")]
+        public IHttpActionResult PutServico([FromBody] Servico servico)
         {
             try
             {                
                 _context.Servico.AddOrUpdate(servico);
                 _context.SaveChanges();
 
-                return Created("Ok", profissionalId);
+                return Created("Ok", servico);
             }
             catch (Exception)
             {
