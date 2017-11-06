@@ -38,8 +38,9 @@ namespace VeterinarioAPI.Controllers
         {
             return from c in _context.Consulta
                    where c.Animal.UsuarioId == usuarioId &&
-                   (dataIni != null ? dataIni >= c.Data : false) &&
-                   (dataFim != null ? dataFim <= c.Data : false)
+                   (dataIni != null ? dataIni >= c.Data : true) &&
+                   (dataFim != null ? dataFim <= c.Data : true) &&
+                   c.Deleted == false
                    select c;
         }
 
@@ -61,8 +62,9 @@ namespace VeterinarioAPI.Controllers
                    where c.Animal.UsuarioId == usuarioId &&
                    (c.Animal.Nome.Contains(nome) ||
                    c.Profissional.Nome.Contains(nome)) &&
-                   (dataIni != null ? dataIni >= c.Data : false) &&
-                   (dataFim != null ? dataFim <= c.Data : false)
+                   (dataIni != null ? dataIni >= c.Data : true) &&
+                   (dataFim != null ? dataFim <= c.Data : true) &&
+                   c.Deleted == false
                    select c;
         }
 
@@ -81,8 +83,9 @@ namespace VeterinarioAPI.Controllers
         {
             return from c in _context.Consulta
                    where c.AnimalId == animalId &&
-                   (dataIni != null ? dataIni >= c.Data : false) &&
-                   (dataFim != null ? dataFim <= c.Data : false)
+                   (dataIni != null ? dataIni >= c.Data : true) &&
+                   (dataFim != null ? dataFim <= c.Data : true) &&
+                   c.Deleted == false
                    select c;
         }
 
@@ -103,8 +106,9 @@ namespace VeterinarioAPI.Controllers
             return from a in _context.Consulta
                    where a.AnimalId == animalId &&
                    a.Animal.Nome.ToLower().Contains(nome.ToLower()) &&
-                   (dataIni != null ? dataIni >= a.Data : false) &&
-                   (dataFim != null ? dataFim <= a.Data : false)
+                   (dataIni != null ? dataIni >= a.Data : true) &&
+                   (dataFim != null ? dataFim <= a.Data : true) &&
+                   a.Deleted == false
                    select a;
         }
 
@@ -123,8 +127,9 @@ namespace VeterinarioAPI.Controllers
         {
             return from c in _context.Consulta
                    where c.ProfissionalId == profissionalId &&
-                   (dataIni != null ? dataIni >= c.Data : false) &&
-                   (dataFim != null ? dataFim <= c.Data : false)
+                   (dataIni != null ? dataIni >= c.Data : true) &&
+                   (dataFim != null ? dataFim <= c.Data : true) &&
+                   c.Deleted == false
                    select c;
         }
 
@@ -146,8 +151,9 @@ namespace VeterinarioAPI.Controllers
                    where c.ProfissionalId == profissionalId &&
                    (c.Animal.Nome.Contains(nome) ||
                    c.Animal.Dono.Nome.Contains(nome)) &&
-                   (dataIni != null ? dataIni >= c.Data : false) &&
-                   (dataFim != null ? dataFim <= c.Data : false)
+                   (dataIni != null ? dataIni >= c.Data : true) &&
+                   (dataFim != null ? dataFim <= c.Data : true) &&
+                   c.Deleted == false
                    select c;
         }
 
@@ -204,7 +210,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Entry(new Consulta { ConsultaId = consultaId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.Consulta.AddOrUpdate(new Consulta { ConsultaId = consultaId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

@@ -79,10 +79,6 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/Servicos/Any/{latitude:double}/{longitude:double}/")]
         public IEnumerable<Profissional> GetByAnyServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
-            //var query3 = prof.Where(p => p.Servicos.Any(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)));
-
-            //var tst = prof.Any(p => p.Servicos.Intersect(servicos, new ServicoComparer()))
-
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
             return from p in _context.Profissional.AsEnumerable<Profissional>()
                    let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
@@ -95,8 +91,6 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/Servicos/All/{latitude:double}/{longitude:double}/")]
         public IEnumerable<Profissional> GetByAllServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
-            //var query4 = prof.Where(p => p.Servicos.Where(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)).Count() == servicos.Count());
-
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
             var tst = from p in _context.Profissional.AsEnumerable<Profissional>()
                       let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
@@ -134,7 +128,7 @@ namespace VeterinarioAPI.Controllers
                 _context.SaveChanges();
                 return Created("Ok", profissional);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -172,7 +166,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Entry(new Profissional { ProfissionalId = profissionalId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.Profissional.AddOrUpdate(new Profissional { ProfissionalId = profissionalId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }
@@ -197,10 +191,6 @@ namespace VeterinarioAPI.Controllers
                 var profissional = (from p in _context.Profissional
                                     where p.ProfissionalId == profissionalId
                                     select p).FirstOrDefault();
-                var tipoContato = (from tc in _context.TipoContato
-                                   where tc.TipoContatoId == contato.TipoContatoId
-                                   select tc).FirstOrDefault();
-                contato.TipoContato = tipoContato ?? contato.TipoContato;
                 profissional?.Contatos.Add(contato);
                 _context.Profissional.AddOrUpdate(profissional);
                 _context.SaveChanges();
@@ -227,11 +217,10 @@ namespace VeterinarioAPI.Controllers
                 var profissional = (from p in _context.Profissional
                                     where p.ProfissionalId == profissionalId
                                     select p).FirstOrDefault();
-                var serv = (from s in _context.Servico
-                            where s.ServicoId == servico.ServicoId
-                            select s).Single();
-                servico = serv ?? servico;
-                profissional?.Servicos.Add(serv);
+                var servicoDB = (from s in _context.Servico
+                                 where s.ServicoId == servico.ServicoId
+                                 select s).SingleOrDefault();
+                profissional?.Servicos.Add(servicoDB ?? servico);
                 _context.Profissional.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Created("Ok", profissionalId);

@@ -7,7 +7,7 @@ using System.Data.Entity.Spatial;
 
 namespace VeterinarioAPI.Models
 {
-    public class Profissional
+    public class Profissional : EntityBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProfissionalId { get; set; }
@@ -21,5 +21,16 @@ namespace VeterinarioAPI.Models
         public virtual ICollection<Contato> Contatos { get; set; }
         public virtual ICollection<Servico> Servicos { get; set; }
 
+        public override bool Equals(object obj)
+        {
+            if(obj != null && typeof(Profissional) == obj.GetType())
+                return (obj as Profissional).ProfissionalId == ProfissionalId;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ProfissionalId;
+        }
     }
 }

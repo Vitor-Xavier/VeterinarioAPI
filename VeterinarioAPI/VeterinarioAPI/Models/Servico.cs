@@ -7,7 +7,7 @@ using System.Web;
 
 namespace VeterinarioAPI.Models
 {
-    public class Servico
+    public class Servico : EntityBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ServicoId { get; set; }
@@ -19,7 +19,14 @@ namespace VeterinarioAPI.Models
 
         public override bool Equals(object obj)
         {
-            return ServicoId == (obj as Servico).ServicoId;
+            if (obj != null && typeof(Servico) == obj.GetType())
+                return (obj as Servico).ServicoId == ServicoId;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return ServicoId;
         }
     }
 }

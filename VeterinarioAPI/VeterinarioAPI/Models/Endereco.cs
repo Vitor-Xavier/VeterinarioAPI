@@ -8,7 +8,7 @@ using System.Web;
 
 namespace VeterinarioAPI.Models
 {
-    public class Endereco
+    public class Endereco : EntityBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int EnderecoId { get; set; }
@@ -22,19 +22,16 @@ namespace VeterinarioAPI.Models
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
-        //private DbGeography localizacao;
-        //[JsonIgnore]
-        //public DbGeography Localizacao
-        //{
-        //    get
-        //    {
-        //        return DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
-        //    }
-        //    set
-        //    {
-        //        localizacao = DbGeography.FromText(String.Format("POINT({0} {1})", Latitude.ToString().Replace(",", "."), Longitude.ToString().Replace(",", ".")));
-        //    }
-        //}
+        public override bool Equals(object obj)
+        {
+            if (obj != null && typeof(Endereco) == obj.GetType())
+                return (obj as Endereco).EnderecoId == EnderecoId;
+            return false;
+        }
 
+        public override int GetHashCode()
+        {
+            return EnderecoId;
+        }
     }
 }

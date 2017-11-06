@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Data.Entity.Migrations;
 using System.Web.Http;
 using VeterinarioAPI.Context;
@@ -53,7 +54,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Entry(new Contato { ContatoId = contatoId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.Contato.AddOrUpdate(new Contato { ContatoId = contatoId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

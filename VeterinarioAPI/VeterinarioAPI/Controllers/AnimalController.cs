@@ -32,7 +32,8 @@ namespace VeterinarioAPI.Controllers
         public IEnumerable<Animal> Get(int usuarioId)
         {
             return from a in _context.Animal
-                   where a.UsuarioId == usuarioId
+                   where a.UsuarioId == usuarioId //&&
+                   //a.Deleted == false
                    select a;
         }
 
@@ -47,7 +48,8 @@ namespace VeterinarioAPI.Controllers
         {
             return (from a in _context.Animal
                     where a.UsuarioId == usuarioId && 
-                    a.AnimalId == animalId
+                    a.AnimalId == animalId &&
+                    a.Deleted == false
                     select a).FirstOrDefault();
         }
 
@@ -61,7 +63,8 @@ namespace VeterinarioAPI.Controllers
         {
             return from a in _context.Animal
                    where a.UsuarioId == usuarioId &&
-                   a.Nome.Contains(nome)
+                   a.Nome.Contains(nome) &&
+                   a.Deleted == false
                    select a;
         }
 
@@ -78,10 +81,6 @@ namespace VeterinarioAPI.Controllers
             try
             {
                 animal.UsuarioId = usuarioId;
-                var tipoAnimal = (from ta in _context.TipoAnimal
-                                  where ta.TipoAnimalId == animal.TipoAnimalId
-                                  select ta).SingleOrDefault();
-                animal.TipoAnimal = tipoAnimal ?? animal.TipoAnimal;
                 _context.Animal.Add(animal);
                 _context.SaveChanges();
                 return Created(usuarioId.ToString(), animal);
@@ -126,7 +125,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Entry(new Animal { AnimalId = animalId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.Animal.AddOrUpdate(new Animal { AnimalId = animalId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

@@ -136,6 +136,7 @@
     <Compile Include="Models\Animal.cs" />
     <Compile Include="Models\Contato.cs" />
     <Compile Include="Models\Endereco.cs" />
+    <Compile Include="Models\EntityBase.cs" />
     <Compile Include="Models\Profissional.cs" />
     <Compile Include="Models\Servico.cs" />
     <Compile Include="Models\TipoAnimal.cs" />

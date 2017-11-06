@@ -32,7 +32,7 @@ namespace VeterinarioAPI.Controllers
         /// <param name="endereco">Dados do endereço</param>
         /// <returns>Sucesso da operação</returns>
         [HttpPost]
-        [Route("Endereco/{profissionalId:int}")] //[Route("Endereco/Profissional/{profissionalId:int}")]
+        [Route("Endereco/Profissional/{profissionalId:int}")]
         public IHttpActionResult PostEnderecoProfissional(int profissionalId, [FromBody] Endereco endereco)
         {
             try

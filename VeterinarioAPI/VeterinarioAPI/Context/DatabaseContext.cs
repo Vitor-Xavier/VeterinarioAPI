@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
+using VeterinarioAPI.Controllers;
 using VeterinarioAPI.Models;
 
 namespace VeterinarioAPI.Context
@@ -23,7 +25,8 @@ namespace VeterinarioAPI.Context
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            Database.SetInitializer<DatabaseContext>(null);
+            //Database.SetInitializer<DatabaseContext>(null);
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DatabaseContext>());
             base.OnModelCreating(modelBuilder);
         }
     }

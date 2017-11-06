@@ -89,7 +89,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Entry(new Usuario { UsuarioId = usuarioId }).State = System.Data.Entity.EntityState.Deleted;
+                _context.Usuario.AddOrUpdate(new Usuario { UsuarioId = usuarioId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }
@@ -114,10 +114,6 @@ namespace VeterinarioAPI.Controllers
                 var usuario = (from u in _context.Usuario
                                where u.UsuarioId == usuarioId
                                select u).SingleOrDefault();
-                var tipoContato = (from tc in _context.TipoContato
-                                   where tc.TipoContatoId == contato.TipoContatoId
-                                   select tc).FirstOrDefault();
-                contato.TipoContato = tipoContato ?? contato.TipoContato;
                 usuario?.Contatos.Add(contato);
                 _context.Usuario.AddOrUpdate(usuario);
                 _context.SaveChanges();

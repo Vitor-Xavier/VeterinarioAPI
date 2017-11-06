@@ -6,7 +6,7 @@ using System.Web;
 
 namespace VeterinarioAPI.Models
 {
-    public class Animal
+    public class Animal : EntityBase
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int AnimalId { get; set; }
@@ -17,5 +17,17 @@ namespace VeterinarioAPI.Models
         public virtual TipoAnimal TipoAnimal { get; set; }
         public int UsuarioId { get; set; }
         public virtual Usuario Dono { get; set; }
+
+        public override bool Equals(object obj)
+        {
+            if (obj != null && typeof(Animal) == obj.GetType())
+                return (obj as Animal).AnimalId == AnimalId;
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            return AnimalId;
+        }
     }
 }
