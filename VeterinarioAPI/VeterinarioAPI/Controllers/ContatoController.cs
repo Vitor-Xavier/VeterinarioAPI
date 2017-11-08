@@ -33,7 +33,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Contato.AddOrUpdate(contato);
+                _context.Contatos.AddOrUpdate(contato);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -54,7 +54,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Contato.AddOrUpdate(new Contato { ContatoId = contatoId, Deleted = true });
+                _context.Contatos.AddOrUpdate(new Contato { ContatoId = contatoId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

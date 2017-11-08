@@ -37,12 +37,12 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var profissional = (from p in _context.Profissional
+                var profissional = (from p in _context.Profissionais
                                     where p.ProfissionalId == profissionalId
                                     select p).SingleOrDefault();
                 profissional.Endereco = endereco;
                 profissional.EnderecoId = endereco.EnderecoId;
-                _context.Profissional.AddOrUpdate(profissional);
+                _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Created("Ok", profissionalId);
             }
@@ -64,11 +64,11 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var usuario = (from u in _context.Usuario
+                var usuario = (from u in _context.Usuarios
                                where u.UsuarioId == usuarioId
                                select u).SingleOrDefault();
                 usuario.Endereco = endereco;
-                _context.Usuario.AddOrUpdate(usuario);
+                _context.Usuarios.AddOrUpdate(usuario);
                 _context.SaveChanges();
                 return Created("Ok", usuarioId);
             }

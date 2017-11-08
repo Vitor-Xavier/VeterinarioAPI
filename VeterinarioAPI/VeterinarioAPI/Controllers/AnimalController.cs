@@ -31,9 +31,9 @@ namespace VeterinarioAPI.Controllers
         [Route("Animal/{usuarioId:int}")]
         public IEnumerable<Animal> Get(int usuarioId)
         {
-            return from a in _context.Animal
-                   where a.UsuarioId == usuarioId //&&
-                   //a.Deleted == false
+            return from a in _context.Animais
+                   where a.UsuarioId == usuarioId &&
+                   a.Deleted == false
                    select a;
         }
 
@@ -46,7 +46,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Animal/{usuarioId:int}/{animalId:int}")]
         public Animal GetById(int usuarioId, int animalId)
         {
-            return (from a in _context.Animal
+            return (from a in _context.Animais
                     where a.UsuarioId == usuarioId && 
                     a.AnimalId == animalId &&
                     a.Deleted == false
@@ -61,7 +61,7 @@ namespace VeterinarioAPI.Controllers
         /// <returns></returns>
         public IEnumerable<Animal> GetByName(int usuarioId, string nome)
         {
-            return from a in _context.Animal
+            return from a in _context.Animais
                    where a.UsuarioId == usuarioId &&
                    a.Nome.Contains(nome) &&
                    a.Deleted == false
@@ -81,7 +81,7 @@ namespace VeterinarioAPI.Controllers
             try
             {
                 animal.UsuarioId = usuarioId;
-                _context.Animal.Add(animal);
+                _context.Animais.Add(animal);
                 _context.SaveChanges();
                 return Created(usuarioId.ToString(), animal);
             }
@@ -103,7 +103,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Animal.AddOrUpdate(animal);
+                _context.Animais.AddOrUpdate(animal);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -125,7 +125,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Animal.AddOrUpdate(new Animal { AnimalId = animalId, Deleted = true });
+                _context.Animais.AddOrUpdate(new Animal { AnimalId = animalId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

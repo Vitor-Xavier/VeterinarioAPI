@@ -31,7 +31,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Servico")]
         public IEnumerable<Servico> GetAll()
         {
-            return _context.Servico;
+            return _context.Servicos;
         }
 
         /// <summary>
@@ -45,12 +45,12 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Servico.Add(servico);
+                _context.Servicos.Add(servico);
                 _context.SaveChanges();
 
                 return Created("Ok", "");
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -67,7 +67,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {                
-                _context.Servico.AddOrUpdate(servico);
+                _context.Servicos.AddOrUpdate(servico);
                 _context.SaveChanges();
 
                 return Created("Ok", servico);
@@ -90,12 +90,12 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var servico =  (from s in _context.Servico
+                var servico =  (from s in _context.Servicos
                                 where s.ServicoId == servicoId
                                 select s).SingleOrDefault();
 
                 servico.Profissionais.Remove(servico.Profissionais.Where(p => p.ProfissionalId == profissionalId).SingleOrDefault());
-                _context.Servico.AddOrUpdate(servico);
+                _context.Servicos.AddOrUpdate(servico);
                 _context.SaveChanges();
 
                 return Ok();

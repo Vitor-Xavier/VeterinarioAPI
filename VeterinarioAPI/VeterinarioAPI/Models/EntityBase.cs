@@ -11,7 +11,6 @@ namespace VeterinarioAPI.Models
     {
         public EntityBase()
         {
-            CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
             Deleted = false;
         }

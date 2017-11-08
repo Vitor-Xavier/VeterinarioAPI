@@ -13,19 +13,20 @@ namespace VeterinarioAPI.Context
     {
         public DatabaseContext() : base("name=Veterinario_DB") { } //base("name=VETERINARIODB") { }
 
-        public virtual DbSet<Animal> Animal { get; set; }
-        public virtual DbSet<Consulta> Consulta { get; set; }
-        public virtual DbSet<Contato> Contato { get; set; }
-        public virtual DbSet<Endereco> Endereco { get; set; }
-        public virtual DbSet<Profissional> Profissional { get; set; }
-        public virtual DbSet<Servico> Servico { get; set; }
-        public virtual DbSet<TipoAnimal> TipoAnimal { get; set; }
-        public virtual DbSet<TipoContato> TipoContato { get; set; }
-        public virtual DbSet<Usuario> Usuario { get; set; }
+        public virtual DbSet<Animal> Animais { get; set; }
+        public virtual DbSet<Consulta> Consultas { get; set; }
+        public virtual DbSet<Contato> Contatos { get; set; }
+        public virtual DbSet<Endereco> Enderecos { get; set; }
+        public virtual DbSet<Profissional> Profissionais { get; set; }
+        public virtual DbSet<Servico> Servicos { get; set; }
+        public virtual DbSet<TipoAnimal> TipoAnimais { get; set; }
+        public virtual DbSet<TipoContato> TipoContatos { get; set; }
+        public virtual DbSet<Usuario> Usuarios { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //Database.SetInitializer<DatabaseContext>(null);
+            // Realiza o DROP no banco de dados caso o modelo sofra alterações.
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DatabaseContext>());
             base.OnModelCreating(modelBuilder);
         }

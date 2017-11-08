@@ -34,9 +34,9 @@ namespace VeterinarioAPI.Controllers
         [Route("Consulta/usuario/{usuarioId:int}")]
         [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime?}/")]
         [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
-        public IEnumerable<Consulta> GetByUsuario(int usuarioId, DateTime? dataIni, DateTime? dataFim)
+        public IEnumerable<Consulta> GetByUsuario(int usuarioId, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consulta
+            return from c in _context.Consultas
                    where c.Animal.UsuarioId == usuarioId &&
                    (dataIni != null ? dataIni >= c.Data : true) &&
                    (dataFim != null ? dataFim <= c.Data : true) &&
@@ -54,11 +54,11 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/usuario/pesquisa/{usuarioId:int}/{nome}")]
-        [Route("Consulta/usuario/pesquisa/{usuarioId:int}/{nome}/{dataIni:datetime}/")]
-        [Route("Consulta/usuario/pesquisa/{usuarioId:int}/{nome}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByUsuarioNome(int usuarioId, string nome, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/usuario/pesquisa/{usuarioId:int}/{nome}/{dataIni:datetime?}/")]
+        [Route("Consulta/usuario/pesquisa/{usuarioId:int}/{nome}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByUsuarioNome(int usuarioId, string nome, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consulta
+            return from c in _context.Consultas
                    where c.Animal.UsuarioId == usuarioId &&
                    (c.Animal.Nome.Contains(nome) ||
                    c.Profissional.Nome.Contains(nome)) &&
@@ -77,11 +77,11 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/animal/{animalId:int}")]
-        [Route("Consulta/animal/{animalId:int}/{dataIni:datetime}/")]
-        [Route("Consulta/animal/{animalId:int}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByAnimal(int animalId, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/animal/{animalId:int}/{dataIni:datetime?}/")]
+        [Route("Consulta/animal/{animalId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByAnimal(int animalId, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consulta
+            return from c in _context.Consultas
                    where c.AnimalId == animalId &&
                    (dataIni != null ? dataIni >= c.Data : true) &&
                    (dataFim != null ? dataFim <= c.Data : true) &&
@@ -99,11 +99,11 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/animal/pesquisa/{animalId:int}/{nome}")]
-        [Route("Consulta/animal/pesquisa/{animalId:int}/{nome}/{dataIni:datetime}/")]
-        [Route("Consulta/animal/pesquisa/{animalId:int}/{nome}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByAnimal(int animalId, string nome, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/animal/pesquisa/{animalId:int}/{nome}/{dataIni:datetime?}/")]
+        [Route("Consulta/animal/pesquisa/{animalId:int}/{nome}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByAnimal(int animalId, string nome, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from a in _context.Consulta
+            return from a in _context.Consultas
                    where a.AnimalId == animalId &&
                    a.Animal.Nome.ToLower().Contains(nome.ToLower()) &&
                    (dataIni != null ? dataIni >= a.Data : true) &&
@@ -123,9 +123,9 @@ namespace VeterinarioAPI.Controllers
         [Route("Consulta/profissional/{profissionalId:int}")]
         [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime?}/")]
         [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
-        public IEnumerable<Consulta> GetByProfissional(int profissionalId, DateTime? dataIni, DateTime? dataFim)
+        public IEnumerable<Consulta> GetByProfissional(int profissionalId, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consulta
+            return from c in _context.Consultas
                    where c.ProfissionalId == profissionalId &&
                    (dataIni != null ? dataIni >= c.Data : true) &&
                    (dataFim != null ? dataFim <= c.Data : true) &&
@@ -143,11 +143,11 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Lista de Consultas</returns>
         [HttpGet]
         [Route("Consulta/profissional/pesquisa/{profissionalId:int}/{nome}")]
-        [Route("Consulta/profissional/pesquisa/{profissionalId:int}/{nome}/{dataIni:datetime}/")]
-        [Route("Consulta/profissional/pesquisa/{profissionalId:int}/{nome}/{dataIni:datetime}/{dataFim:datetime}/")]
-        public IEnumerable<Consulta> GetByProfissionalNome(int profissionalId, string nome, DateTime dataIni, DateTime dataFim)
+        [Route("Consulta/profissional/pesquisa/{profissionalId:int}/{nome}/{dataIni:datetime?}/")]
+        [Route("Consulta/profissional/pesquisa/{profissionalId:int}/{nome}/{dataIni:datetime?}/{dataFim:datetime?}/")]
+        public IEnumerable<Consulta> GetByProfissionalNome(int profissionalId, string nome, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consulta
+            return from c in _context.Consultas
                    where c.ProfissionalId == profissionalId &&
                    (c.Animal.Nome.Contains(nome) ||
                    c.Animal.Dono.Nome.Contains(nome)) &&
@@ -168,7 +168,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Consulta.Add(consulta);
+                _context.Consultas.Add(consulta);
                 _context.SaveChanges();
                 return Created("Ok", consulta);
             }
@@ -189,7 +189,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Consulta.AddOrUpdate(consulta);
+                _context.Consultas.AddOrUpdate(consulta);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -210,7 +210,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Consulta.AddOrUpdate(new Consulta { ConsultaId = consultaId, Deleted = true });
+                _context.Consultas.AddOrUpdate(new Consulta { ConsultaId = consultaId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }

@@ -32,7 +32,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional")]
         public IEnumerable<Profissional> Get()
         {
-            return _context.Profissional;
+            return _context.Profissionais;
         }
 
         /// <summary>
@@ -48,9 +48,9 @@ namespace VeterinarioAPI.Controllers
             try
             {
                 var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-                var tst = from p in _context.Profissional
+                var tst = from p in _context.Profissionais
                           let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
-                          orderby coord2.Distance(coord)
+                          orderby coord2.Distance(coord), p.Online
                           select p;
                 return tst;
             }
@@ -70,8 +70,9 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/Servico")]
         public IEnumerable<Profissional> GetByServico(int servicoId)
         {
-            return  from p in _context.Profissional
+            return  from p in _context.Profissionais
                     where p.Servicos.Any(s => s.ServicoId == servicoId)
+                    orderby p.Online
                     select p;
         }
 
@@ -80,10 +81,10 @@ namespace VeterinarioAPI.Controllers
         public IEnumerable<Profissional> GetByAnyServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-            return from p in _context.Profissional.AsEnumerable<Profissional>()
+            return from p in _context.Profissionais.AsEnumerable<Profissional>()
                    let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                    where p.Servicos.Any(s1 => servicos.Any(s2 => s2.ServicoId == s1.ServicoId))
-                   orderby coord2.Distance(coord)
+                   orderby coord2.Distance(coord), p.Online
                    select p;
         }
 
@@ -92,10 +93,10 @@ namespace VeterinarioAPI.Controllers
         public IEnumerable<Profissional> GetByAllServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-            var tst = from p in _context.Profissional.AsEnumerable<Profissional>()
+            var tst = from p in _context.Profissionais.AsEnumerable<Profissional>()
                       let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                       where p.Servicos.Where(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)).Count() == servicos.Count()
-                      orderby coord2.Distance(coord)
+                      orderby coord2.Distance(coord), p.Online
                       select p;
             return tst;
         }
@@ -108,7 +109,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/{profissionalId:int}")]
         public Profissional GetById(int profissionalId)
         {
-            return (from p in _context.Profissional
+            return (from p in _context.Profissionais
                     where p.ProfissionalId == profissionalId
                     select p).FirstOrDefault();
         }
@@ -124,7 +125,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Profissional.Add(profissional);
+                _context.Profissionais.Add(profissional);
                 _context.SaveChanges();
                 return Created("Ok", profissional);
             }
@@ -145,7 +146,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Profissional.AddOrUpdate(profissional);
+                _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -166,7 +167,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Profissional.AddOrUpdate(new Profissional { ProfissionalId = profissionalId, Deleted = true });
+                _context.Profissionais.AddOrUpdate(new Profissional { ProfissionalId = profissionalId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }
@@ -188,11 +189,11 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var profissional = (from p in _context.Profissional
+                var profissional = (from p in _context.Profissionais
                                     where p.ProfissionalId == profissionalId
                                     select p).FirstOrDefault();
                 profissional?.Contatos.Add(contato);
-                _context.Profissional.AddOrUpdate(profissional);
+                _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Created("Ok", profissionalId);
             }
@@ -214,14 +215,14 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var profissional = (from p in _context.Profissional
+                var profissional = (from p in _context.Profissionais
                                     where p.ProfissionalId == profissionalId
                                     select p).FirstOrDefault();
-                var servicoDB = (from s in _context.Servico
+                var servicoDB = (from s in _context.Servicos
                                  where s.ServicoId == servico.ServicoId
                                  select s).SingleOrDefault();
                 profissional?.Servicos.Add(servicoDB ?? servico);
-                _context.Profissional.AddOrUpdate(profissional);
+                _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Created("Ok", profissionalId);
             }

@@ -31,7 +31,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Usuario/{usuarioId:int}")]
         public Usuario Get(int usuarioId)
         {
-            return (from a in _context.Usuario
+            return (from a in _context.Usuarios
                     where a.UsuarioId == usuarioId
                     select a).FirstOrDefault();
         }
@@ -47,7 +47,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Usuario.Add(usuario);
+                _context.Usuarios.Add(usuario);
                 _context.SaveChanges();
                 return Created("Ok", usuario);
             }
@@ -68,7 +68,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Usuario.AddOrUpdate(usuario);
+                _context.Usuarios.AddOrUpdate(usuario);
                 _context.SaveChanges();
                 return Ok();
             }
@@ -89,7 +89,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Usuario.AddOrUpdate(new Usuario { UsuarioId = usuarioId, Deleted = true });
+                _context.Usuarios.AddOrUpdate(new Usuario { UsuarioId = usuarioId, Deleted = true });
                 _context.SaveChanges();
                 return Ok();
             }
@@ -111,11 +111,11 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                var usuario = (from u in _context.Usuario
+                var usuario = (from u in _context.Usuarios
                                where u.UsuarioId == usuarioId
                                select u).SingleOrDefault();
                 usuario?.Contatos.Add(contato);
-                _context.Usuario.AddOrUpdate(usuario);
+                _context.Usuarios.AddOrUpdate(usuario);
                 _context.SaveChanges();
 
                 return Created("Ok", usuarioId);
