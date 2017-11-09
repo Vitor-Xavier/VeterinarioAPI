@@ -54,7 +54,10 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Contatos.AddOrUpdate(new Contato { ContatoId = contatoId, Deleted = true });
+                var contato = new Contato { ContatoId = contatoId, Deleted = true };
+                _context.Contatos.Attach(contato);
+                _context.Entry(contato).Property(x => x.Deleted).IsModified = true;
+
                 _context.SaveChanges();
                 return Ok();
             }

@@ -89,8 +89,11 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Usuarios.AddOrUpdate(new Usuario { UsuarioId = usuarioId, Deleted = true });
+                var usuario = new Usuario { UsuarioId = usuarioId, Deleted = true };
+                _context.Usuarios.Attach(usuario);
+                _context.Entry(usuario).Property(x => x.Deleted).IsModified = true;
                 _context.SaveChanges();
+
                 return Ok();
             }
             catch (Exception)

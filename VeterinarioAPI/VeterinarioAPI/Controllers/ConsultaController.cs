@@ -210,7 +210,10 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Consultas.AddOrUpdate(new Consulta { ConsultaId = consultaId, Deleted = true });
+                var consulta = new Consulta { ConsultaId = consultaId, Deleted = true };
+                _context.Consultas.Attach(consulta);
+                _context.Entry(consulta).Property(x => x.Deleted).IsModified = true;
+
                 _context.SaveChanges();
                 return Ok();
             }

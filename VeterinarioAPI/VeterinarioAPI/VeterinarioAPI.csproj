@@ -128,6 +128,8 @@
     <Compile Include="Controllers\EnderecoController.cs" />
     <Compile Include="Controllers\ProfissionalController.cs" />
     <Compile Include="Controllers\ServicoController.cs" />
+    <Compile Include="Controllers\TipoAnimalController.cs" />
+    <Compile Include="Controllers\TipoContatoController.cs" />
     <Compile Include="Controllers\UsuarioController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

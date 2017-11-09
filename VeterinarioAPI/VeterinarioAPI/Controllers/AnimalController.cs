@@ -81,11 +81,13 @@ namespace VeterinarioAPI.Controllers
             try
             {
                 animal.UsuarioId = usuarioId;
+                animal.TipoAnimal = null;
+                animal.Dono = null;
                 _context.Animais.Add(animal);
                 _context.SaveChanges();
                 return Created(usuarioId.ToString(), animal);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
@@ -125,11 +127,14 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Animais.AddOrUpdate(new Animal { AnimalId = animalId, Deleted = true });
+                var animal = new Animal { AnimalId = animalId, Deleted = true };
+                _context.Animais.Attach(animal);
+                _context.Entry(animal).Property(x => x.Deleted).IsModified = true;
+
                 _context.SaveChanges();
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }

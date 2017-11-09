@@ -167,7 +167,10 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                _context.Profissionais.AddOrUpdate(new Profissional { ProfissionalId = profissionalId, Deleted = true });
+                var profissional = new Profissional { ProfissionalId = profissionalId, Deleted = true };
+                _context.Profissionais.Attach(profissional);
+                _context.Entry(profissional).Property(x => x.Deleted).IsModified = true;
+
                 _context.SaveChanges();
                 return Ok();
             }

@@ -11,6 +11,7 @@ namespace VeterinarioAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int TipoAnimalId { get; set; }
         public string Tipo { get; set; }
+        public string Icone { get; set; }
 
         public override bool Equals(object obj)
         {
