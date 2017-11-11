@@ -33,6 +33,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                contato.TipoContato = null;
                 _context.Contatos.AddOrUpdate(contato);
                 _context.SaveChanges();
                 return Ok();

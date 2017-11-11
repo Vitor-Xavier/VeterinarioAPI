@@ -146,6 +146,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                profissional.Endereco = null;
                 _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();
                 return Ok();

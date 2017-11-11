@@ -105,6 +105,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                animal.Dono = null;
                 _context.Animais.AddOrUpdate(animal);
                 _context.SaveChanges();
                 return Ok();

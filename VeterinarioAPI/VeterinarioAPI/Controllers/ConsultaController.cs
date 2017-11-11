@@ -168,6 +168,8 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                consulta.Profissional = null;
+                consulta.Animal = null;
                 _context.Consultas.Add(consulta);
                 _context.SaveChanges();
                 return Created("Ok", consulta);
@@ -189,6 +191,8 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
+                consulta.Profissional = null;
+                consulta.Animal = null;
                 _context.Consultas.AddOrUpdate(consulta);
                 _context.SaveChanges();
                 return Ok();
