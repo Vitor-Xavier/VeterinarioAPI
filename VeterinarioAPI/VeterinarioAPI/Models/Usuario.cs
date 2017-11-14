@@ -6,7 +6,7 @@ using System.Web;
 
 namespace VeterinarioAPI.Models
 {
-    public class Usuario : EntityBase
+    public class Usuario : Login
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UsuarioId { get; set; }

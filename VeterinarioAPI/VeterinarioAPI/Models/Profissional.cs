@@ -7,7 +7,7 @@ using System.Data.Entity.Spatial;
 
 namespace VeterinarioAPI.Models
 {
-    public class Profissional : EntityBase
+    public class Profissional : Login
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ProfissionalId { get; set; }
