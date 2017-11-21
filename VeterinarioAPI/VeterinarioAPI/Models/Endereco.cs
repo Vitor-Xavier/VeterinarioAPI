@@ -33,5 +33,10 @@ namespace VeterinarioAPI.Models
         {
             return EnderecoId;
         }
+
+        public override string ToString()
+        {
+            return $"{Logradouro}, {Numero} - {Bairro}, {Cidade} - {Estado}, {CEP}";
+        }
     }
 }
