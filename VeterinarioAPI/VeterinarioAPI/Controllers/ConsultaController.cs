@@ -204,6 +204,31 @@ namespace VeterinarioAPI.Controllers
         }
 
         /// <summary>
+        /// Altera o estado da consulta informada.
+        /// </summary>
+        /// <param name="consultaId">Identificação da consulta</param>
+        /// <param name="status">Estado da requisição de consulta</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPut]
+        [Route("Consulta/Requisicao/{consultaId:int}/{status:int}")]
+        public IHttpActionResult PutStatusConsulta(int consultaId, int status)
+        {
+            try
+            {
+                var consulta = new Consulta { ConsultaId = consultaId, Status = status };
+                _context.Consultas.Attach(consulta);
+                _context.Entry(consulta).Property(x => x.Status).IsModified = true;
+
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
         /// Altera estado do consulta para inativa.
         /// </summary>
         /// <param name="consultaId">Idetificação da consulta</param>
