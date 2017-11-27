@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Microsoft.WindowsAzure.Storage;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -16,8 +19,8 @@ namespace VeterinarioAPI.Controllers
         public List<string> AllowedFileTypes { get; set; } = new List<string> { "image/jpeg", "image/png", "image/bmp" };
 
         [HttpPost]
-        [Route("Upload1")]
-        public async Task<IHttpActionResult> PostImage()
+        [Route("Upload1/{filename}")]
+        public async Task<IHttpActionResult> PostImage(string filename)
         {
             if(!Request.Content.IsMimeMultipartContent())
             {
@@ -28,34 +31,47 @@ namespace VeterinarioAPI.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
             }
+            filename = String.Concat(filename, ".png");
 
-            //var uploadPath = HostingEnvironment.MapPath("/") + @"/Uploads";
-            //Directory.CreateDirectory(uploadPath);
-            //var provider = new MultipartFormDataStreamProvider(uploadPath);
-            //await Request.Content.ReadAsMultipartAsync(provider);
+            var storageConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
+            var storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference("images");
+            container.CreateIfNotExists();
 
-            //var file = provider.FileData;
-            return Ok();
+            var blockBlob = container.GetBlockBlobReference(filename);
+            blockBlob.Properties.ContentType = content.Contents[0].Headers.ContentType.ToString();
+            using (var fileStream = await content.Contents[0].ReadAsStreamAsync()) 
+            {
+                blockBlob.UploadFromStream(fileStream);
+            }
+
+            return Ok(blockBlob.Uri.AbsoluteUri);
         }
 
         [HttpPost]
-        [Route("Upload")]
-        public async Task<IHttpActionResult> PostByteArray()
+        [Route("Upload/{filename}")]
+        public async Task<IHttpActionResult> PostByteArray(string filename)
         {
-            var tst = await Request.Content.ReadAsByteArrayAsync();
-            var tst2 = new MemoryStream(tst);
-            var tst3 = Image.FromStream(tst2);
+            var byteArray = await Request.Content.ReadAsByteArrayAsync();
+            var stream = new MemoryStream(byteArray);
 
-            //try
-            //{
-            //    tst3.Save("C:\\Users\\Public\\Documents\\tst.png", System.Drawing.Imaging.ImageFormat.Png);
-            //}
-            //catch (Exception e)
-            //{
-            //    throw;
-            //}
-            
-            return Ok();
+            filename = String.Concat(filename, ".png");
+
+            var storageConnectionString = ConfigurationManager.AppSettings["StorageConnectionString"];
+            var storageAccount = CloudStorageAccount.Parse(storageConnectionString);
+            var blobClient = storageAccount.CreateCloudBlobClient();
+            var container = blobClient.GetContainerReference("images");
+            container.CreateIfNotExists();
+
+            var blockBlob = container.GetBlockBlobReference(filename);
+            blockBlob.Properties.ContentType = "image/jpeg";
+            using (var fileStream = new MemoryStream(byteArray))
+            {
+                blockBlob.UploadFromStream(fileStream);
+            }
+
+            return Ok(blockBlob.Uri.AbsoluteUri);
         }
 
     }

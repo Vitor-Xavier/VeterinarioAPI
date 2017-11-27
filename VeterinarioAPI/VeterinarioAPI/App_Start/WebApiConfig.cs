@@ -26,6 +26,7 @@ namespace VeterinarioAPI
             var formatters = GlobalConfiguration.Configuration.Formatters;
             var jsonFormatter = formatters.JsonFormatter;
             var settings = jsonFormatter.SerializerSettings;
+            settings.Culture = new System.Globalization.CultureInfo("pt-BR");
             settings.Formatting = Formatting.Indented;
             settings.ContractResolver = new CamelCasePropertyNamesContractResolver();
         }
