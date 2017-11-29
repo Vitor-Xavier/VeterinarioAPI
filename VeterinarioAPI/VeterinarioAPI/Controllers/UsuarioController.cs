@@ -31,9 +31,11 @@ namespace VeterinarioAPI.Controllers
         [Route("Usuario/{usuarioId:int}")]
         public Usuario Get(int usuarioId)
         {
-            return (from a in _context.Usuarios
-                    where a.UsuarioId == usuarioId
-                    select a).FirstOrDefault();
+            var usuario = (from a in _context.Usuarios
+                            where a.UsuarioId == usuarioId
+                            select a).FirstOrDefault();
+            usuario.Contatos = usuario.Contatos.Where(c => c.Deleted == false).ToList();
+            return usuario;
         }
 
         /// <summary>

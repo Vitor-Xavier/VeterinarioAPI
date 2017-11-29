@@ -28,7 +28,7 @@ namespace VeterinarioAPI.Controllers
         /// <param name="contato">Dados de contato</param>
         /// <returns>Sucesso da operação</returns>
         [HttpPut]
-        [Route("Contato/Profissional")]
+        [Route("Contato")]
         public IHttpActionResult PutContato([FromBody] Contato contato)
         {
             try
@@ -50,7 +50,7 @@ namespace VeterinarioAPI.Controllers
         /// <param name="contatoId">Identificação do contato</param>
         /// <returns>Sucesso da operação</returns>
         [HttpDelete]
-        [Route("Contato/Profissional/{contatoId:int}")]
+        [Route("Contato/{contatoId:int}")]
         public IHttpActionResult DeleteContato(int contatoId)
         {
             try

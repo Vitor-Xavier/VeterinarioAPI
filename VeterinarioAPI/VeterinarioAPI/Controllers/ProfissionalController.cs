@@ -32,7 +32,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional")]
         public IEnumerable<Profissional> Get()
         {
-            return _context.Profissionais;
+            return FilterProfessional(_context.Profissionais.ToList());
         }
 
         /// <summary>
@@ -48,11 +48,11 @@ namespace VeterinarioAPI.Controllers
             try
             {
                 var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-                var tst = from p in _context.Profissionais
-                          let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
-                          orderby coord2.Distance(coord), p.Online
-                          select p;
-                return tst;
+                var profissionais = from p in _context.Profissionais
+                                    let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
+                                    orderby coord2.Distance(coord), p.Online
+                                    select p;
+                return FilterProfessional(profissionais.ToList());
             }
             catch (Exception e)
             {
@@ -70,10 +70,11 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/Servico")]
         public IEnumerable<Profissional> GetByServico(int servicoId)
         {
-            return  from p in _context.Profissionais
-                    where p.Servicos.Any(s => s.ServicoId == servicoId)
-                    orderby p.Online
-                    select p;
+            var profissionais = from p in _context.Profissionais
+                                where p.Servicos.Any(s => s.ServicoId == servicoId)
+                                orderby p.Online
+                                select p;
+            return FilterProfessional(profissionais.ToList());
         }
 
         [HttpPost]
@@ -81,11 +82,12 @@ namespace VeterinarioAPI.Controllers
         public IEnumerable<Profissional> GetByAnyServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-            return from p in _context.Profissionais.AsEnumerable<Profissional>()
+            var profissionais = from p in _context.Profissionais.AsEnumerable<Profissional>()
                    let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
                    where p.Servicos.Any(s1 => servicos.Any(s2 => s2.ServicoId == s1.ServicoId))
                    orderby coord2.Distance(coord), p.Online
                    select p;
+            return FilterProfessional(profissionais.ToList());
         }
 
         [HttpPost]
@@ -93,12 +95,12 @@ namespace VeterinarioAPI.Controllers
         public IEnumerable<Profissional> GetByAllServicos(double latitude, double longitude, [FromBody] IEnumerable<Servico> servicos)
         {
             var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
-            var tst = from p in _context.Profissionais.AsEnumerable<Profissional>()
-                      let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
-                      where p.Servicos.Where(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)).Count() == servicos.Count()
-                      orderby coord2.Distance(coord), p.Online
-                      select p;
-            return tst;
+            var profissionais = from p in _context.Profissionais.AsEnumerable<Profissional>()
+                              let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
+                              where p.Servicos.Where(c => servicos.Any(c2 => c2.ServicoId == c.ServicoId)).Count() == servicos.Count()
+                              orderby coord2.Distance(coord), p.Online
+                              select p;
+            return FilterProfessional(profissionais.ToList());
         }
 
         /// <summary>
@@ -109,9 +111,10 @@ namespace VeterinarioAPI.Controllers
         [Route("Profissional/{profissionalId:int}")]
         public Profissional GetById(int profissionalId)
         {
-            return (from p in _context.Profissionais
-                    where p.ProfissionalId == profissionalId
-                    select p).FirstOrDefault();
+            var profissional = (from p in _context.Profissionais
+                                where p.ProfissionalId == profissionalId
+                                select p).FirstOrDefault();
+            return FilterProfessional(new List<Profissional> { profissional }).SingleOrDefault();
         }
 
         /// <summary>
@@ -234,6 +237,17 @@ namespace VeterinarioAPI.Controllers
             {
                 return InternalServerError();
             }
+        }
+
+        private IEnumerable<Profissional> FilterProfessional(List<Profissional> profissionais)
+        {
+            foreach (var profissional in profissionais)
+            {
+                profissional.Contatos = profissional.Contatos.Where(c => c.Deleted == false).ToList();
+                profissional.Servicos = profissional.Servicos.Where(s => s.Deleted == false).ToList();
+            }
+
+            return profissionais;
         }
 
     }
