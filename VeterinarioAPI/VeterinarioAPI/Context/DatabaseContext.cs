@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using VeterinarioAPI.Controllers;
 using VeterinarioAPI.Models;
@@ -11,7 +12,7 @@ namespace VeterinarioAPI.Context
 {
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext() : base("name=Veterinario_DB") { } //base("name=VETERINARIODB") { }
+        public DatabaseContext() : base("name=VETERINARIODB") { } //base("name=VETERINARIODB") { }
 
         public virtual DbSet<Animal> Animais { get; set; }
         public virtual DbSet<Consulta> Consultas { get; set; }
@@ -29,6 +30,17 @@ namespace VeterinarioAPI.Context
             // Realiza o DROP no banco de dados caso o modelo sofra alterações.
             //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<DatabaseContext>());
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override int SaveChanges()
+        {
+            var entities = ChangeTracker.Entries().Where(x => x.Entity is EntityBase && (x.State == EntityState.Added || x.State == EntityState.Modified));
+            foreach (var entity in entities)
+            {
+                if (entity.State == EntityState.Added)
+                    ((EntityBase)entity.Entity).CreatedAt = DateTime.UtcNow;
+            }
+            return base.SaveChanges();
         }
     }
 }

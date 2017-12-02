@@ -51,5 +51,28 @@ namespace VeterinarioAPI.Controllers
                 return new Login { Id = usuario.UsuarioId, NomeUsuario = usuario.NomeUsuario, Senha = usuario.Senha, Tipo = "Usuario" };
             return null;
         }
+
+        /// <summary>
+        /// Verifica a disponibilidade do nome de usuário informado.
+        /// </summary>
+        /// <param name="username">Nome de usuário a validar</param>
+        /// <returns>Disponibilidade do nome de usuário</returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("Login/{username}")]
+        public IHttpActionResult VerificaUsername(string username)
+        {
+            var profissional = (from p in _context.Profissionais
+                                where p.NomeUsuario.ToUpper().Equals(username.ToUpper())
+                                select p).SingleOrDefault();
+            if (profissional != null)
+                return Ok(false);
+            var usuario = (from u in _context.Usuarios
+                           where u.NomeUsuario.ToUpper().Equals(username.ToUpper())
+                           select u).SingleOrDefault();
+            if (usuario != null)
+                return Ok(false);
+            return Ok(true);
+        }
     }
 }

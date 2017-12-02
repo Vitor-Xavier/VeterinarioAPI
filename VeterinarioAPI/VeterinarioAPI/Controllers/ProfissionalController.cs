@@ -185,6 +185,31 @@ namespace VeterinarioAPI.Controllers
         }
 
         /// <summary>
+        /// Altera a disponibilidade do profissional.
+        /// </summary>
+        /// <param name="profissionalId">Idetificação do profissional</param>
+        /// /// <param name="online">Estado indicando a disponibilidade</param>
+        /// <returns>Sucesso da operação</returns>
+        [HttpPut]
+        [Route("Profissional/{profissionalId:int}/{online:bool}/")]
+        public IHttpActionResult DeleteProfissional(int profissionalId, bool online)
+        {
+            try
+            {
+                var profissional = new Profissional { ProfissionalId = profissionalId, Online = online };
+                _context.Profissionais.Attach(profissional);
+                _context.Entry(profissional).Property(x => x.Online).IsModified = true;
+
+                _context.SaveChanges();
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return InternalServerError();
+            }
+        }
+
+        /// <summary>
         /// Adiciona contato ao profissional.
         /// </summary>
         /// <param name="profissionalId">Identificação do profissional</param>

@@ -24,7 +24,7 @@ namespace VeterinarioAPI.Controllers
         }
 
         /// <summary>
-        /// Retona lita de animais associados a determinado usuário.
+        /// Retona lista de animais associados a determinado usuário.
         /// </summary>
         /// <param name="usuarioId">Identificação do usuário</param>
         /// <returns>Lista de Animais</returns>

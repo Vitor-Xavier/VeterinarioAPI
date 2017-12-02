@@ -15,7 +15,6 @@ namespace VeterinarioAPI.Models
             Deleted = false;
         }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [JsonIgnore]
         public DateTime CreatedAt { get; set; }
         [JsonIgnore]
