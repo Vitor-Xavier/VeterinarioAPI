@@ -224,6 +224,7 @@ namespace VeterinarioAPI.Controllers
                 var profissional = (from p in _context.Profissionais
                                     where p.ProfissionalId == profissionalId
                                     select p).FirstOrDefault();
+                contato.TipoContato = null;
                 profissional?.Contatos.Add(contato);
                 _context.Profissionais.AddOrUpdate(profissional);
                 _context.SaveChanges();

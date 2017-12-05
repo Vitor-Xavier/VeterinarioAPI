@@ -119,6 +119,7 @@ namespace VeterinarioAPI.Controllers
                 var usuario = (from u in _context.Usuarios
                                where u.UsuarioId == usuarioId
                                select u).SingleOrDefault();
+                contato.TipoContato = null;
                 usuario?.Contatos.Add(contato);
                 _context.Usuarios.AddOrUpdate(usuario);
                 _context.SaveChanges();

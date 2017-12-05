@@ -38,7 +38,16 @@ namespace VeterinarioAPI.Context
             foreach (var entity in entities)
             {
                 if (entity.State == EntityState.Added)
+                {
                     ((EntityBase)entity.Entity).CreatedAt = DateTime.UtcNow;
+                    ((EntityBase)entity.Entity).UpdatedAt = DateTime.UtcNow;
+                }
+                else
+                {
+                    this.Entry(((EntityBase)entity.Entity)).Property(x => x.CreatedAt).IsModified = false;
+                    ((EntityBase)entity.Entity).UpdatedAt = DateTime.UtcNow;
+                }
+                    
             }
             return base.SaveChanges();
         }

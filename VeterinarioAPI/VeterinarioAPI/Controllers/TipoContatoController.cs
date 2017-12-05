@@ -56,7 +56,7 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Sucesso da Operação</returns>
         [HttpPost]
         [Route("TipoContato")]
-        public IHttpActionResult PostTipoAnimal([FromBody] TipoContato tipoContato)
+        public IHttpActionResult PostTipoContato([FromBody] TipoContato tipoContato)
         {
             try
             {
@@ -78,7 +78,7 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Sucesso da Operação</returns>
         [HttpPut]
         [Route("TipoContato")]
-        public IHttpActionResult PutTipoAnimal([FromBody] TipoContato tipoContato)
+        public IHttpActionResult PutTipoContato([FromBody] TipoContato tipoContato)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Sucesso da Operação</returns>
         [HttpDelete]
         [Route("TipoContato/{tipoAnimalId:int}")]
-        public IHttpActionResult DeleteTipoAnimal(int tipoContatoId)
+        public IHttpActionResult DeleteTipoContato(int tipoContatoId)
         {
             try
             {
