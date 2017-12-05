@@ -12,7 +12,7 @@ namespace VeterinarioAPI.Context
 {
     public class DatabaseContext : DbContext
     {
-        public DatabaseContext() : base("name=VETERINARIODB") { } //base("name=VETERINARIODB") { }
+        public DatabaseContext() : base("name=VETERINARIODB") { } //"Veterinario_DB"VETERINARIODB"
 
         public virtual DbSet<Animal> Animais { get; set; }
         public virtual DbSet<Consulta> Consultas { get; set; }

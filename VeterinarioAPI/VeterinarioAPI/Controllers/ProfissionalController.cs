@@ -50,7 +50,7 @@ namespace VeterinarioAPI.Controllers
                 var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
                 var profissionais = from p in _context.Profissionais
                                     let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
-                                    orderby coord2.Distance(coord), p.Online
+                                    orderby p.Online, coord2.Distance(coord)
                                     select p;
                 return FilterProfessional(profissionais.ToList());
             }
@@ -108,6 +108,7 @@ namespace VeterinarioAPI.Controllers
         /// </summary>
         /// <param name="profissionalId"></param>
         /// <returns>Usuário</returns>
+        [HttpGet]
         [Route("Profissional/{profissionalId:int}")]
         public Profissional GetById(int profissionalId)
         {
@@ -192,7 +193,7 @@ namespace VeterinarioAPI.Controllers
         /// <returns>Sucesso da operação</returns>
         [HttpPut]
         [Route("Profissional/{profissionalId:int}/{online:bool}/")]
-        public IHttpActionResult DeleteProfissional(int profissionalId, bool online)
+        public IHttpActionResult AlteraEstadoProfissional(int profissionalId, bool online)
         {
             try
             {
@@ -203,7 +204,7 @@ namespace VeterinarioAPI.Controllers
                 _context.SaveChanges();
                 return Ok();
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return InternalServerError();
             }
