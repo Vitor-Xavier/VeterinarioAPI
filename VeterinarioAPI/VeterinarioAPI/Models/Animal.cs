@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -16,7 +17,8 @@ namespace VeterinarioAPI.Models
         public int TipoAnimalId { get; set; }
         public virtual TipoAnimal TipoAnimal { get; set; }
         public int UsuarioId { get; set; }
-        public virtual Usuario Dono { get; set; }
+        [JsonProperty("dono")]
+        public virtual Usuario Usuario { get; set; }
 
         public override bool Equals(object obj)
         {

@@ -50,7 +50,7 @@ namespace VeterinarioAPI.Controllers
                 var coord = DbGeography.FromText(String.Format("POINT({0} {1})", latitude.ToString().Replace(",", "."), longitude.ToString().Replace(",", ".")));
                 var profissionais = from p in _context.Profissionais
                                     let coord2 = DbGeography.FromText("POINT(" + p.Endereco.Latitude.ToString().Replace(",", ".") + " " + p.Endereco.Longitude.ToString().Replace(",", ".") + ")")
-                                    orderby p.Online, coord2.Distance(coord)
+                                    orderby p.Online descending, coord2.Distance(coord)
                                     select p;
                 return FilterProfessional(profissionais.ToList());
             }

@@ -30,9 +30,9 @@ namespace VeterinarioAPI.Controllers
         [Route("TipoContato")]
         public IEnumerable<TipoContato> GetAll()
         {
-            return from ta in _context.TipoContatos
-                   where ta.Deleted == false
-                   select ta;
+            return (from ta in _context.TipoContatos
+                    where ta.Deleted == false
+                    select ta).AsEnumerable();
         }
 
         /// <summary>

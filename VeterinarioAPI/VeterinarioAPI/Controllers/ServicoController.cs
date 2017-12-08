@@ -31,7 +31,7 @@ namespace VeterinarioAPI.Controllers
         [Route("Servico")]
         public IEnumerable<Servico> GetAll()
         {
-            return _context.Servicos;
+            return _context.Servicos.AsEnumerable();
         }
 
         /// <summary>

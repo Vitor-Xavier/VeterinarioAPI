@@ -36,12 +36,12 @@ namespace VeterinarioAPI.Controllers
         [Route("Consulta/usuario/{usuarioId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
         public IEnumerable<Consulta> GetByUsuario(int usuarioId, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consultas
-                   where c.Animal.UsuarioId == usuarioId &&
-                   (dataIni != null ? dataIni >= c.Data : true) &&
-                   (dataFim != null ? dataFim <= c.Data : true) &&
-                   c.Deleted == false
-                   select c;
+            return (from c in _context.Consultas
+                    where c.Animal.UsuarioId == usuarioId &&
+                    (dataIni != null ? dataIni >= c.Data : true) &&
+                    (dataFim != null ? dataFim <= c.Data : true) &&
+                    c.Deleted == false
+                    select c).AsEnumerable();
         }
 
         /// <summary>
@@ -125,12 +125,12 @@ namespace VeterinarioAPI.Controllers
         [Route("Consulta/profissional/{profissionalId:int}/{dataIni:datetime?}/{dataFim:datetime?}/")]
         public IEnumerable<Consulta> GetByProfissional(int profissionalId, DateTime? dataIni = null, DateTime? dataFim = null)
         {
-            return from c in _context.Consultas
-                   where c.ProfissionalId == profissionalId &&
-                   (dataIni != null ? dataIni >= c.Data : true) &&
-                   (dataFim != null ? dataFim <= c.Data : true) &&
-                   c.Deleted == false
-                   select c;
+            return (from c in _context.Consultas
+                    where c.ProfissionalId == profissionalId &&
+                    (dataIni != null ? dataIni >= c.Data : true) &&
+                    (dataFim != null ? dataFim <= c.Data : true) &&
+                    c.Deleted == false
+                    select c).AsEnumerable();
         }
 
         /// <summary>
@@ -150,7 +150,7 @@ namespace VeterinarioAPI.Controllers
             return from c in _context.Consultas
                    where c.ProfissionalId == profissionalId &&
                    (c.Animal.Nome.Contains(nome) ||
-                   c.Animal.Dono.Nome.Contains(nome)) &&
+                   c.Animal.Usuario.Nome.Contains(nome)) &&
                    (dataIni != null ? dataIni >= c.Data : true) &&
                    (dataFim != null ? dataFim <= c.Data : true) &&
                    c.Deleted == false

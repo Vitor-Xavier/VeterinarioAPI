@@ -31,10 +31,10 @@ namespace VeterinarioAPI.Controllers
         [Route("Animal/{usuarioId:int}")]
         public IEnumerable<Animal> Get(int usuarioId)
         {
-            return from a in _context.Animais
-                   where a.UsuarioId == usuarioId &&
-                   a.Deleted == false
-                   select a;
+            return (from a in _context.Animais
+                    where a.UsuarioId == usuarioId &&
+                    a.Deleted == false
+                    select a).AsEnumerable();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace VeterinarioAPI.Controllers
             {
                 animal.UsuarioId = usuarioId;
                 animal.TipoAnimal = null;
-                animal.Dono = null;
+                animal.Usuario = null;
                 _context.Animais.Add(animal);
                 _context.SaveChanges();
                 return Created(usuarioId.ToString(), animal);
@@ -105,7 +105,7 @@ namespace VeterinarioAPI.Controllers
         {
             try
             {
-                animal.Dono = null;
+                animal.Usuario = null;
                 _context.Animais.AddOrUpdate(animal);
                 _context.SaveChanges();
                 return Ok();
